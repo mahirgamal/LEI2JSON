@@ -22,6 +22,6 @@ This project is licensed under Apache License 2.0 - see the [LICENSE][lic] file 
 [//]: #
   [csv]:  <https://docs.google.com/spreadsheets/d/1SOqi-JuGV21YAHhK24SDBsRlO907d_GajVn9nqFKq4Q/edit#gid=0>
   [lic]: <https://github.com/mahirgamal/csv-publisher/blob/main/LICENSE>
-  [html]: <https://github.com/mahirgamal/csv-publisher/blob/main/Page.html>
-  [JavaScript]: <https://github.com/mahirgamal/csv-publisher/blob/main/Code.gs>
+  [html]: <https://github.com/mahirgamal/csv-publisher/blob/main/src/Page.html>
+  [JavaScript]: <https://github.com/mahirgamal/csv-publisher/blob/main/src/Code.gs>
   [RabbitMQ]: <https://www.rabbitmq.com/>
