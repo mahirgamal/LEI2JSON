@@ -8,7 +8,6 @@ The application can be configured to use a message broker or API, enabling real-
 ## _Tech_
 - [html] - HTML for front end.
 - [JavaScript] - Javascript for back end
-- [RabbitMQ] - RabbitMQ for message broker
 
 ## _Getting Started_
 To use the CSV Publisher, you will need to have access to the Google Spreadsheet that contains your livestock event data. You can access the spreadsheet through the following link: [CSV Publisher][csv]
