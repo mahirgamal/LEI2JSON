@@ -1,4 +1,4 @@
-# csv-publisher
+# PubLEIsh: _Pub_lishing Livestock Event Information for Data Sharing
 
 ## _Introduction_
 The CSV Publisher is a tool that enables livestock producers to manage their livestock event data efficiently by publishing it in CSV format. The tool uses a Google Spreadsheet as an interface, allowing producers to enter data into a familiar tool, reducing the learning curve for new applications.
