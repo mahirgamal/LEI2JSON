@@ -1,4 +1,4 @@
-<p align="center"><style="font-size: 32px">PubLEIsh: <b>Pub</b>lishing <b>L</b>ivestock <b>E</b>vent <b>I</b>nformation for Data <b>Sh</b>aring</font></p>
+<p align="center"><style="font-size: 32px">LEI2JSON: <b>L</b>ivestock <b>E</b>event <b>I</b>nformation <b>To JSON</b></font></p>
 
 
 ## _Introduction_
