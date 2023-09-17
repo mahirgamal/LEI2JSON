@@ -2,16 +2,16 @@
 
 
 ## _Introduction_
-The pubLEIsh is a tool that enables livestock producers to manage their livestock event data efficiently by publishing it in JSON format. The tool uses a Google Spreadsheet as an interface, allowing producers to enter data into a familiar tool, reducing the learning curve for new applications.
+The LEI2JSON tool enables livestock producers to generate JSON data from a spreadsheet. The tool uses a Google Spreadsheet as an interface, allowing producers to enter data into a familiar tool, reducing the learning curve for new applications.
 
-The application can be configured to use a message broker or API, enabling real-time data sharing with consumers, and improving the data flow and connections between producers and consumers. The pubLEIsh can be integrated with other software, such as data analysis tools or data visualisation software.
+The application is configured to build a Google sheet template by extracting headers, notes, data type and validation from JSON schema then validation and generation of JSON data with the options to copy, download and save to Google Drive. The LEI2JSON can be integrated with other software, such as data analysis tools or data visualisation software.
 
 ## _Tech_
 - [html] - HTML for front end.
 - [JavaScript] - Javascript for back end
 
 ## _Getting Started_
-To use the PubLEIsh, you will need to have access to the Google Spreadsheet that contains your livestock event data. You can access the spreadsheet through the following link: [PubLEIsh][pubLEIsh]
+To use the LEI2JSON, you must have access to the Google Spreadsheet containing your livestock event data. You can access the spreadsheet through the following link: [LEI2JSON][LEI2JSON]
 
 ## _Contributing_
 If you find any issues or have suggestions for improvements, please feel free to open an issue or submit a pull request.
@@ -20,8 +20,8 @@ If you find any issues or have suggestions for improvements, please feel free to
 This project is licensed under Apache License 2.0 - see the [LICENSE][lic] file for details.
 
 [//]: #
-  [pubLEIsh]:  <https://docs.google.com/spreadsheets/d/1SOqi-JuGV21YAHhK24SDBsRlO907d_GajVn9nqFKq4Q/edit#gid=0>
-  [lic]: <https://github.com/mahirgamal/csv-publisher/blob/main/LICENSE>
-  [html]: <https://github.com/mahirgamal/csv-publisher/blob/main/src/Page.html>
-  [JavaScript]: <https://github.com/mahirgamal/csv-publisher/blob/main/src/Code.gs>
+  [LEI2JSON]:  <https://docs.google.com/spreadsheets/d/1SOqi-JuGV21YAHhK24SDBsRlO907d_GajVn9nqFKq4Q/edit#gid=0>
+  [lic]: <https://github.com/mahirgamal/LEI2JSON/blob/main/LICENSE>
+  [html]: <https://github.com/mahirgamal/LEI2JSON/blob/main/src/Page.html>
+  [JavaScript]: <https://github.com/mahirgamal/LEI2JSON/blob/main/src/Code.gs>
  
