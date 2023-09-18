@@ -68,15 +68,19 @@ If you encounter any issues or have questions, please check our [FAQ](#FAQ) sect
 
 ## FAQ
 **Q1: How do I get started with LEI2JSON?**
+
 A1:To get started with LEI2JSON, please refer to the "Getting Started" section in the README.md of our repository. It provides step-by-step instructions for setting up and using the add-on within Google Sheets.
 
 **Q2: Is the order of columns in the spreadsheet important when using your add-on?**
+
 A2: No, the order of columns in the spreadsheet is not crucial when using our add-on. We've designed it to be flexible, allowing farmers to rearrange columns as needed without affecting the generated JSON data. This flexibility provides you with greater control over your data management process.
 
 **Q3: Could you explain more about the bidirectional functionality of your add-on?**
+
 A3: Our add-on offers bidirectional functionality, which means it can work in both directions. It can build column headers from a JSON schema, allowing you to set up your spreadsheet structure, and it can also generate JSON data from the populated spreadsheet. This bidirectional capability simplifies the process of managing and working with data, making it a versatile tool for various tasks.
 
 **Q4: What is the JSON schema (LEI) that your add-on uses for generating and validating JSON data?**
+
 A4: Our add-on utilises a predefined JSON schema called [LEI](https://github.com/mahirgamal/LEI-schema) (Livestock Event Information) to facilitate the generation and validation of JSON data. This schema serves as a structured template that defines livestock event data's expected format and structure. It ensures that the generated JSON data adheres to a consistent and standardised format, making it easier to work with and analyse.
 
 ## Contributing
