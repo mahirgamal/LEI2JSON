@@ -23,7 +23,7 @@ The application is designed to create a Google sheet template by extracting head
 
 ## Technologies
 
-- <img src="[html-icon.png](https://www.iconpacks.net/icons/2/free-html-icon-1467-thumb.png)" alt="HTML Icon" width="20"> HTML for the front end.
+- <img src="https://www.iconpacks.net/icons/2/free-html-icon-1467-thumb.png" alt="HTML Icon" width="20"> HTML for the front end.
 - <img src="[javascript-icon.png](https://cdn-icons-png.flaticon.com/512/2965/2965300.png)" alt="JavaScript Icon" width="20"> Apps script for the back end.
 
 
