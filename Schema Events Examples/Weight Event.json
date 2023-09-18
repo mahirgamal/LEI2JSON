@@ -1,0 +1,202 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Weight",
+  "type": "array",
+  "items": {
+    "description": "The root structure for a packet of data.",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "source",
+      "owner",
+      "eventDateTime",
+      "message"
+    ],
+    "properties": {
+      "eventDateTime": {
+        "displayName": "Event Date Time",
+        "type": "string",
+        "format": "date-time",
+        "description": "ISO8601 date and time (dd/MM/yyy HH:mm:ss). MUST contain time zone. UTC recommended."
+      },
+      "source": {
+        "additionalProperties": false,
+        "type": "object",
+        "description": "The device or software that the event originates from.",
+        "required": [
+          "ip_address",
+          "id"
+        ],
+        "properties": {
+          "ip_address": {
+            "type": "string",
+            "format": "ipv4",
+            "description": "The IP address of the publishing technology."
+          },
+          "id": {
+            "type": "string",
+            "description": "Unique identifier on location level in the source system for this device."
+          }
+        }
+      },
+      "owner": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id"
+        ],
+        "properties": {
+          "givenName": {
+            "type": "string",
+            "description": "First name of the person"
+          },
+          "familyName": {
+            "type": "string",
+            "description": "Surname of the person"
+          },
+          "email": {
+            "type": "string",
+            "description": "Email address",
+            "format": "email"
+          },
+          "id": {
+            "type": "string",
+            "description": "The property identification code from the owner."
+          },
+          "telephone": {
+            "type": "string",
+            "description": "Telephone contact"
+          }
+        }
+      },
+      "message": {
+        "required": [
+          "eventName",
+          "item",
+          "event"
+        ],
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "eventName": {
+            "description": "The human and machine readiable unqiue name of the event.",
+            "type": "string"
+          },
+          "item": {
+            "type": "object",
+	    "additionalProperties": false,
+            "properties": {
+              "itemType": {
+                "description": "Animal, crop, machine , ...",
+                "type": "string",
+                "const": "Animal"
+              },
+              "animal": {
+                "type": "object",
+	        "required": [
+	          "identifier"
+	        ],
+                "additionalProperties": false,
+                "properties": {
+                  "identifier": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "id": {
+                        "displayName": "Tag Brand",
+                        "type": "string",
+                        "description": "Tag brand name (e.g., RFID, NLIS ID, ...)."
+                      },
+                      "scheme": {
+                        "displayName": "Tag Number",
+                        "type": "string",
+                        "description": "The Tag no.(RFID) for the animal."
+                      }
+                    }
+                  },
+                  "specie": {
+                    "displayName": "Animal Breed",
+                    "description": "Buffalo , Cattle , Deer , Elk , Goat , Horse , Pig , Sheep , Camel , Kangaroo",
+                    "type": "string",
+                    "enum": ["Buffalo" , "Cattle" , "Deer" , "Elk" , "Goat" , "Horse" , "Pig" , "Sheep" , "Camel" , "Kangaroo"]
+                  },
+                  "gender": {
+                    "displayName": "Gender",
+                    "description": "Female , FemaleNeuter , Male , MaleCryptorchid , MaleNeuter , Unknown",
+                    "type": "string" ,
+                    "enum": ["Female" , "FemaleNeuter" , "Male" , "MaleCryptorchid" , "MaleNeuter", "Unknown"]                
+                  }
+                }
+              }
+            }
+          },
+          "event": {
+            "description": "A mean weight event for cattle.",
+            "required": [
+              "weight"
+            ],
+            "additionalProperties": false,
+            "type": "object",
+            "properties": {
+              "weight": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "kind": {
+                    "displayName": "Weight Type",
+                    "type": "string",
+                    "enum": [
+                      "average",
+                      "individual"
+                    ],
+                    "description": "The method of measuring weight"
+                  },
+                  "measurement": {
+                    "displayName": "Measurement",
+                    "type": "string",
+                    "enum": ["KGM","GRM","LBR","TNE","MC","MGM","ONZ","PN"],
+                    "description": "Measurements for weight (e.g., Kilogram, Gram, Pound, Metric Tonne, Microgram, Milligram,...)."
+                  },
+                  "value": {
+                    "displayName": "Weight Amount",
+                    "type": "number",
+                    "format": "double",
+                    "minimum": 0,
+                    "description": "The weight value, in the units specified (usually kilograms)"
+                  }
+                },
+                "description": "The weight observation, in the units specified (usually kilograms)"
+              },
+              "method": {
+                "description": "Method by which the weight is observed. Includes loadcell (loadbars), girth (tape), assessed (visually), walk-over weighing, prediction, imaging (camera/IR), front end weight correlated to whole body, group average (pen/sample weigh).",
+                "type": "string",
+                "enum": ["StaticLoadCell","Girth","Assessed","WalkOver","Predicted","Imaged","FrontEndCorrelated","GroupAverage"
+                ]
+              }
+            }
+          },
+          "session": {
+            "type": "object",
+            "description": "session details",
+            "additionalProperties": false,
+            "properties": {
+              "sessionID": {
+                "type": "string",
+                "description": "Session number"
+              },
+              "totalInSession": {
+                "type": "integer",
+                "description": "Total of animals for the event per session",
+                "minimum": 0
+              }
+            },
+            "required": [
+              "sessionID",
+              "totalInSession"
+            ]
+          }
+        }
+      }
+    }
+  }
+}
