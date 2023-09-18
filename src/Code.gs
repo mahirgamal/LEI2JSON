@@ -1,348 +1,135 @@
 var ch = 'A';
 var JSONObject = {};
+var jsonSchema = "";
 
 var cache = CacheService.getScriptCache();
 
 /*******************************************/
-/*        publish Message to rmq           */
+/*             generate Message             */
 /*******************************************/
-function publishMessage(fname = "ma", pic = "abcdefghi", reqEmail = "mmm@mm.com", phone = "", address = "", event = "Weight", userName, password) {
-  // Replace these values with your own RabbitMQ configuration
-  var rabbitmqHost = "b-48c245d6-5bad-420c-abf2-1fb71dc2fca3.mq.ap-southeast-2.amazonaws.com";
-  var rabbitmqPort = "15671";
-  var rabbitmqUsername = userName;//"admin";
-  var rabbitmqPassword = password;//"rabbit1@12345";
-  var rabbitmqVirtualHost = "/";
-  var rabbitmqExchange = "my_exchange";
-  var rabbitmqRoutingKey = "my_routing_key";
+function generateMessage(fname = "ma", pic = "abcdefghi", reqEmail = "mmm@mm.com", phone = "", address = "", eventName) {
 
-
-  var cache = CacheService.getScriptCache();
-  JSONObject = cache.get('JSONObject');
-  // Replace this message with your own message
-  var message = getSheetJson(fname, pic, reqEmail, event);
-
-  var result = SpreadsheetApp.getUi().alert("Do you want to continue?", message, SpreadsheetApp.getUi().ButtonSet.YES_NO);
-
-  if (result == SpreadsheetApp.getUi().Button.YES) {
-    var payload = {
-      "properties": {
-        "content_type": "text/plain"
-      },
-      "routing_key": rabbitmqRoutingKey,
-      "payload": message,
-      "payload_encoding": "string"
-    };
-
-    var options = {
-      "method": "post",
-      "payload": JSON.stringify(payload),
-      "headers": {
-        "Authorization": "Basic " + Utilities.base64Encode(rabbitmqUsername + ":" + rabbitmqPassword),
-        "Content-Type": "application/json"
-      }
-    };
-
-    // Construct the URL with the correct format
-    var url = "https://" + rabbitmqHost + ":" + rabbitmqPort + "/api/exchanges/" + encodeURIComponent(rabbitmqVirtualHost) + "/" + encodeURIComponent(rabbitmqExchange) + "/publish";
-
-    try {
-      UrlFetchApp.fetch(url, options);
-      SpreadsheetApp.getUi().alert("Published successfully!");
-    } catch (e) {
-      SpreadsheetApp.getUi().alert("There was an error publishing the message. Please check your username and password.");
-    }
-  }
-  else { SpreadsheetApp.getUi().alert("Not Published !!!"); }
+   //SpreadsheetApp.getUi().alert(eventName);
+   var cache = CacheService.getScriptCache();
+   JSONObject = cache.get('JSONObject');
+   // Replace this message with your own message
+   if(!checkInvalidValues()){
+   var sheet = SpreadsheetApp.getActiveSheet();
+   var message = parseToJSON(sheet, fname, pic, reqEmail, phone, address, eventName);
+   if(message.length === 0)
+   {
+    SpreadsheetApp.getUi().alert('There was an error', 'Error in generating JSON.\nPlease refer to the notes in the column header for more details.',SpreadsheetApp.getUi().ButtonSet.OK);
+    return ['',0]
+   }
+   else
+    return [customStringify(message),1];
+   }
+   else
+   {
+    SpreadsheetApp.getUi().alert('There was an error','Cells highlighted in red do not follow the schema format.\nPlease refer to the notes in the column header for more details.',SpreadsheetApp.getUi().ButtonSet.OK);
+    return ['',0]
+   }
 }
+/*******************************************/
+/*                save Message             */
+/*******************************************/
+function saveMessage(saveOption,message) {
+   console.time("saveMessage");
+   if (saveOption === SpreadsheetApp.getUi().Button.YES) {
+         // Save the JSON file locally on the user's computer
+         var fileName = "message.json"; // Set the desired file name
+         var mimeType = "application/json"; // Set the MIME type for JSON
+         var blob = Utilities.newBlob(message, mimeType, fileName);
 
+         var fileUrl = "data:text/json;charset=utf-8," + encodeURIComponent(message);
+         var anchor = "<a href='" + fileUrl + "' download='" + fileName + "'>Click here to download the JSON file</a>";
+         var htmlOutput = HtmlService.createHtmlOutput(anchor).setWidth(300).setHeight(100);
+         SpreadsheetApp.getUi().showModalDialog(htmlOutput, "Save JSON File");
+      } else if (saveOption === SpreadsheetApp.getUi().Button.NO) {
+         // Save the JSON file on Google Drive
+         var file = DriveApp.createFile("data.json", message, "application/json");
+
+         // Display a confirmation message after saving the file
+         if (file) {
+            SpreadsheetApp.getUi().alert("File saved successfully on Google Drive!");
+         } else {
+            SpreadsheetApp.getUi().alert("Failed to save the file.");
+         }
+      }
+   console.timeEnd("saveMessage");
+}
 /*******************************************/
 /*                    menu                 */
 /*******************************************/
 function onOpen() {
-  SpreadsheetApp.getUi() // Or DocumentApp or SlidesApp or FormApp.
-    .createMenu('CSV Publisher')
-    .addItem('Publish an Event', 'showSidebar')
-    .addToUi();
+    console.time("onOpen");
+   SpreadsheetApp.getUi() // Or DocumentApp or SlidesApp or FormApp.
+      .createMenu('LEI2JSON')
+      .addItem('Generate JSON Message', 'showSidebar')
+      .addToUi();
+    console.timeEnd("onOpen");
 }
 /*******************************************/
 /*          pre-fill the form data         */
 /*******************************************/
 function showSidebar() {
-  var ui = SpreadsheetApp.getUi();
-  var email = Session.getEffectiveUser().getEmail();
-  var self = ContactsApp.getContact(email);
+   var ui = SpreadsheetApp.getUi();
+   var email = "prod.beef@beef.com"//Session.getEffectiveUser().getEmail();
+   var self = ContactsApp.getContact(email);
 
 
-  var html = HtmlService.createTemplateFromFile('Page');
-  html.email = email;
+   var html = HtmlService.createTemplateFromFile('Page.html');
 
-  var name = "x";
-  if (self) {
-    // Prefer given name, if that's available
-    name = self.getGivenName();
-    // But we will settle for the full name
-    if (!name)
-      name = self.getFullName();
+   html.email = email;
 
-  }
-  // If they don't have themselves in Contacts, return the bald userName.
-  else {
-    name = Session.getEffectiveUser().getUsername();
+   var name = "x";
+   if (self) {
+      // Prefer given name, if that's available
+      name = self.getGivenName();
+      // But we will settle for the full name
+      if (!name)
+         name = self.getFullName();
 
-  }
+   }
+   // If they don't have themselves in Contacts, return the bald userName.
+   else {
+      name = Session.getEffectiveUser().getUsername();
 
-  html.name = name;
+   }
+
+   html.name = "Producer A.Beef";//name;
+   html.address = "123 Street, City, 0000";//name;
+   html.phone = "+61412345678";//name;
+   
 
 
-
-  var output = html.evaluate();
-  output.setTitle('Producer Information');
-  ui.showSidebar(output);
-  SpreadsheetApp.getActiveSheet().clearContents();
-
+   var output = html.evaluate();
+   output.setTitle('Livestock Event Information Sheet to JSON');
+   ui.showSidebar(output);
+   clearSpreadsheet();
 }
-
-// function showToolsSideBar() {
-//   var html = HtmlService.createHtmlOutputFromFile('Index')
-//     .setTitle('test');
-//   SpreadsheetApp.getUi() // Or DocumentApp or SlidesApp or FormApp.
-//     .showSidebar(html);
-// }
 /*******************************************/
 /*              event template             */
 /*******************************************/
-function template(event) {
-  SpreadsheetApp.getActiveSheet().clearContents();
-  if (event == "Weight") {
-    var json = `{
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "description": "",
-  "type": "array",
-  "items": {
-    "description": "The root structure for a packet of data.",
-    "type": "object",
-    "additionalProperties": false,
-    "required": [
-      "source",
-      "owner",
-      "eventDateTime",
-      "message"
-    ],
-    "properties": {
-      "eventDateTime": {
-        "displayName": "Event Date Time",
-        "type": "string",
-        "format": "date-time",
-        "description": "ISO8601 date and time. MUST contain time zone. UTC recommended."
-      },
-      "source": {
-        "additionalProperties": false,
-        "type": "object",
-        "description": "The device or software that the event originates from.",
-        "required": [
-          "ip_address",
-          "id"
-        ],
-        "properties": {
-          "ip_address": {
-            "type": "string",
-            "format": "ipv4",
-            "description": "The IP address of the publishing technology."
-          },
-          "id": {
-            "type": "string",
-            "description": "Unique identifier on location level in the source system for this device."
-          }
-        }
-      },
-      "owner": {
-        "type": "object",
-        "additionalProperties": false,
-        "required": [
-          "id"
-        ],
-        "properties": {
-          "givenName": {
-            "type": "string",
-            "description": "First name of the person"
-          },
-          "familyName": {
-            "type": "string",
-            "description": "Surname of the person"
-          },
-          "email": {
-            "type": "string",
-            "description": "Email address",
-            "format": "email"
-          },
-          "id": {
-            "type": "string",
-            "description": "The property identification code from the owner."
-          },
-          "telephone": {
-            "type": "string",
-            "description": "Telephone contact"
-          }
-        }
-      },
-      "message": {
-        "required": [
-          "eventName",
-          "item",
-          "event"
-        ],
-        "type": "object",
-        "additionalProperties": true,
-        "properties": {
-          "eventName": {
-            "description": "The human and machine readiable unqiue name of the event.",
-            "type": "string",
-            "const": "cattleMeanWt"
-          },
-          "item": {
-            "type": "object",
-            "required": [
-              "identifier"
-            ],
-            "properties": {
-              "itemType": {
-                "description": "Animal, crop, machine , ...",
-                "type": "string",
-                "const": "Animal"
-              },
-              "animal": {
-                "type": "object",
-                "additionalProperties": false,
-                "properties": {
-                  "identifier": {
-                    "type": "object",
-                    "additionalProperties": false,
-                    "properties": {
-                      "id": {
-                        "displayName": "Tage Type",
-                        "type": "string",
-                        "description": "The type of the tag for the animal."
-                      },
-                      "scheme": {
-                        "displayName": "Tage No",
-                        "type": "string",
-                        "description": "The Tag no.(RFID) for the animal."
-                      }
-                    }
-                  },
-                  "specie": {
-                    "displayName": "Breed",
-                    "description": "Buffalo , Cattle , Deer , Elk , Goat , Horse , Pig , Sheep , Camel , Kangaroo",
-                    "type": "string"
-                  },
-                  "gender": {
-                    "displayName": "Gender",
-                    "description": "Female , FemaleNeuter , Male , MaleCryptorchid , MaleNeuter , Unknown",
-                    "type": "string"                 
-                  }
-                }
-              }
-            }
-          },
-          "event": {
-            "description": "A mean weight event for cattle.",
-            "required": [
-              "weight"
-            ],
-            "additionalProperties": false,
-            "type": "object",
-            "properties": {
-              "weight": {
-                "type": "object",
-                "additionalProperties": false,
-                "properties": {
-                  "kind": {
-                    "displayName": "Kind",
-                    "type": "string",
-                    "enum": [
-                      "average",
-                      "individual"
-                    ],
-                    "description": "type of measurement"
-                  },
-                  "measurement": {
-                    "displayName": "Measurement",
-                    "type": "string",
-                    "enum": [
-                      "KGM",
-                      "GRM",
-                      "LBR",
-                      "TNE",
-                      "MC",
-                      "MGM",
-                      "ONZ",
-                      "PN"
-                    ],
-                    "description": "measurements for weight e.g. Kilogram, Gram, Pound, Metric Tonne, Microgram, Milligram."
-                  },
-                  "value": {
-                    "displayName": "Value",
-                    "type": "number",
-                    "format": "double",
-                    "description": "The weight observation, in the units specified (usually kilograms)"
-                  }
-                },
-                "description": "The weight observation, in the units specified (usually kilograms)"
-              },
-              "method": {
-                "description": "Method by which the weight is observed. Includes loadcell (loadbars), girth (tape), assessed (visually), walk-over weighing, prediction, imaging (camera/IR), front end weight correlated to whole body, group average (pen/sample weigh).",
-                "type": "string",
-                "enum": [
-                  "StaticLoadCell",
-                  "Girth",
-                  "Assessed",
-                  "WalkOver",
-                  "Predicted",
-                  "Imaged",
-                  "FrontEndCorrelated",
-                  "GroupAverage"
-                ]
-              }
-            }
-          },
-          "session": {
-            "type": "object",
-            "description": "session details",
-            "additionalProperties": false,
-            "properties": {
-              "sessionID": {
-                "type": "string",
-                "description": "random number"
-              },
-              "totalInSession": {
-                "type": "integer",
-                "description": "total of rfid per pic",
-                "minimum": 0
-              }
-            },
-            "required": [
-              "sessionID",
-              "totalInSession"
-            ]
-          }
-        }
-      }
-    }
-  }
-}`;
+function template(json) {
+  
+  
+  var log="";
+  for (let ii = 0; ii < 11; ii++) {
+    clearSpreadsheet();
+   var startTime = new Date().getTime(); // Capture the start time
+   
+   var eventName = JSON.parse(json).description;
+   var obj = JSON.parse(json);
+   var keys = getKeys(obj);
+   //console.log(keys);
+   var jObject = [];
 
+   /**************************************************** */
 
-    var obj = JSON.parse(json);
-    var keys = getKeys(obj);
-    console.log(keys);
-    var jObject = [];
-
-    /**************************************************** */
-
-    //var JSONObject = {};
-    var arr = [];
-    for (var i = 0; i < keys.length; i++) {
+   //var JSONObject = {};
+   var arr = [];
+   for (var i = 0; i < keys.length; i++) {
       //console.log(keys[i]);
       y = keys[i].split('.');
       //console.log(y.length);
@@ -351,13 +138,13 @@ function template(event) {
       const properties = y;
       let current = jsonObject;
       properties.forEach((property, index) => {
-        if (!current[property]) {
-          current[property] = {};
-        }
-        current = current[property];
-        if (index === properties.length - 2) {
-          current[properties[index + 1]] = "";
-        }
+         if (!current[property]) {
+            current[property] = {};
+         }
+         current = current[property];
+         if (index === properties.length - 2) {
+            current[properties[index + 1]] = "";
+         }
       });
 
 
@@ -368,219 +155,427 @@ function template(event) {
       str = str.substring(0, lastIndex) + str.substring(lastIndex + 1);
       //console.log(str);
       arr.push(JSON.parse(str));
-    }
+   }
 
 
-    /******************************** */
+   /******************************** */
 
-    const merged = {};
+   const merged = {};
 
-    arr.forEach(obj => {
+   arr.forEach(obj => {
       for (const key in obj) {
-        if (key in merged) {
-          Object.assign(merged[key], mergeProperties(obj[key], merged[key]));
-        } else {
-          merged[key] = obj[key];
-        }
+         if (key in merged) {
+            Object.assign(merged[key], mergeProperties(obj[key], merged[key]));
+         } else {
+            merged[key] = obj[key];
+         }
       }
-    });
+   });
 
 
-
-    JSONObject = merged;
-    jObject.push(JSONObject);
-    console.log(JSON.stringify(jObject));
-    JSONObject = JSON.stringify(jObject)
-    //SpreadsheetApp.getUi().alert(JSONObject);
-    cache.put('JSONObject', JSONObject);
+   JSONObject = merged;
+   jObject.push(JSONObject);
+   //console.log(JSON.stringify(jObject));
+   JSONObject = JSON.stringify(jObject)
+   //SpreadsheetApp.getUi().alert(JSONObject);
+   cache.put('JSONObject', JSONObject,3600);
+   cache.put('JSONSCHEMA', json,3600);
+   //}
+   
+   
+    var endTime = new Date().getTime(); // Capture the end time
+    var executionTime = endTime - startTime; // Calculate the execution time
+    log+=executionTime+"\n"
   }
+SpreadsheetApp.getUi().alert('Execution time of template: \n' + log + ' milliseconds');
+   return eventName;
 }
 /*******************************************/
 /*        Merge JSON Properties            */
 /*******************************************/
 function mergeProperties(obj1, obj2) {
-  const mergedObj = {};
-  for (const key in obj1) {
-    if (key in obj2) {
-      mergedObj[key] = mergeProperties(obj1[key], obj2[key]);
-    } else {
-      mergedObj[key] = obj1[key];
-    }
-  }
-  for (const key in obj2) {
-    if (!(key in obj1)) {
-      mergedObj[key] = obj2[key];
-    }
-  }
-  return mergedObj;
+   const mergedObj = {};
+   for (const key in obj1) {
+      if (key in obj2) {
+         mergedObj[key] = mergeProperties(obj1[key], obj2[key]);
+      } else {
+         mergedObj[key] = obj1[key];
+      }
+   }
+   for (const key in obj2) {
+      if (!(key in obj1)) {
+         mergedObj[key] = obj2[key];
+      }
+   }
+   return mergedObj;
 }
-/*******************************************/
-/*              get json method            */
-/*******************************************/
-function getSheetJson(fname, pic, reqEmail, event) {
-
-  var sheet = SpreadsheetApp.getActiveSheet();
-  //SpreadsheetApp.getUi().alert(JSON.stringify(JSONObject));
-  return pasreToJSON(sheet, fname, pic, reqEmail, event);
-}
-
 /*******************************************/
 /*              get json method            */
 /*******************************************/
 function getKeys(object) {
-  var str = '';
-  function iter(o, p) {
-    if (Array.isArray(o)) { return; }
-    if (o && typeof o === 'object') {
-      var keys = Object.keys(o);
-      //console.log(keys + " - " + keys.length);
-      if (keys.length) {
-
-        keys.forEach(function (k) {
-          if (k == 'displayName') {
-            p.push(o[k]);
-            SpreadsheetApp.getActiveSheet().getRange(str + ch + (1)).setValue(o[k]);
-            ch = String.fromCharCode(ch.charCodeAt(0) + 1);
-            if (ch > 'Z' && str == '') {
-              ch = 'A';
-              str = 'A'
-            }
-            else
-              if (ch > 'Z' && str != '') {
-                ch = 'A';
-                str = String.fromCharCode(str.charCodeAt(0) + 1);
-              }
-          }
-          //if(k=='properties')
-
-          iter(o[k], p.concat(k));
-
-        }
-        );
+   var str = '';
+  var sheet=SpreadsheetApp.getActiveSheet();
+  
+   function iter(o, p) {
+      if (Array.isArray(o)) {
+         return;
       }
-      return;
+      if (o && typeof o === 'object') {
+         var keys = Object.keys(o);
+         //console.log(keys + " - " + keys.length);
+         if (keys.length) {
+
+            keys.forEach(function (k) {
+               if (k == "displayName") {
+                  var range=sheet.getRange(str +ch + "2:" + ch );
+                  p.push(o[k]);
+                  sheet.getRange(str + ch + (1)).setValue(o[k]);
+                  if ("enum" in o) {
+                    var enumValues = o["enum"];
+                    var rule = SpreadsheetApp.newDataValidation().requireValueInList(enumValues).setAllowInvalid(false).setHelpText('Please select a value from the dropdown list.').build();
+                    range.setDataValidation(rule);
+                  }
+                  if ("type" in o) {
+                    var type = o["type"];
+                    var format;
+                    if ("format" in o) {
+                      format = o["format"];
+                    }
+                    switch(type) {
+                        case "string":
+                          if (format == "email") {
+                            var emailRule = SpreadsheetApp.newDataValidation().requireTextIsEmail().build();
+                            range.setDataValidation(emailRule);
+                          } else if (format == "uri") {
+                            var urlRegex = "https?://.+";
+                            var urlRule = SpreadsheetApp.newDataValidation().requireTextMatchesPattern(urlRegex).build();
+                            range.setDataValidation(urlRule);
+                          } else if (format == "date-time") {
+                             var date = SpreadsheetApp.newDataValidation().requireDate().setAllowInvalid(false).setHelpText('Please Enter correct date format (dd/MM/yyyy HH:mm:ss or dd/MM/yyy).').build();
+                             range.setDataValidation(date);
+                             range.setNumberFormat("dd/MM/yyyy HH:mm:ss");
+                          } else if (format == "date") {
+                            var date = SpreadsheetApp.newDataValidation().requireDate().setAllowInvalid(false).setHelpText('Please Enter correct date format (dd/MM/yyy).').build();
+                            range.setDataValidation(date);
+                            range.setNumberFormat("dd/MM/yyyy");
+                          } else if (format == "time") {
+                            var timeRegex = "^([0-1]?[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$";
+                            var timeRule = SpreadsheetApp.newDataValidation().requireTextMatchesPattern(timeRegex).setAllowInvalid(false).setHelpText('Please Enter correct time format (HH:mm:ss).').build();
+                            range.setDataValidation(timeRule);
+                            range.setNumberFormat("HH:mm:ss");
+                          } else if (format == "hostname") {
+                            // No specific validation for hostname in Google Sheets
+                          } else if (format == "ipv4" || format == "ipv6") {
+                            var ipv4Regex = "^(?:[0-9]{1,3}\\.){3}[0-9]{1,3}$";
+                            var ipv4Rule = SpreadsheetApp.newDataValidation().requireTextMatchesPattern(ipv4Regex).setAllowInvalid(false).setHelpText('Please Enter correct IPV4 format.').build();
+                            range.setDataValidation(ipv4Rule);
+                          }
+                          break;
+                          
+                        case "number":
+                        case "integer":
+                          if (format == "float" || format == "double") {
+                            range.setNumberFormat("0.00");
+                          } 
+                          var numberRule = SpreadsheetApp.newDataValidation().requireNumberGreaterThan(0).setAllowInvalid(false).setHelpText('Please Enter correct number format').build();
+                          range.setDataValidation(numberRule);
+                          break;
+                          
+                        case "boolean":
+                          range.insertCheckboxes();
+                          break;
+                          
+                        case "null":
+                          // No specific validation for null
+                          break;
+                          
+                        case "array":
+                          // No specific validation for array in Google Sheets
+                          break;
+                          
+                        case "object":
+                          // No specific validation for object in Google Sheets
+                          break;
+                          
+                        default:
+                          // No specific validation for unknown types
+                          break;
+                    }
+                  }
+                  sheet.getRange(str + ch + (1)).setNote(o["description"]);
+                  ch = String.fromCharCode(ch.charCodeAt(0) + 1);
+                  if (ch > 'Z' && str == '') {
+                     ch = 'A';
+                     str = 'A'
+                  } else
+                  if (ch > 'Z' && str != '') {
+                     ch = 'A';
+                     str = String.fromCharCode(str.charCodeAt(0) + 1);
+                  }
+               }
+               //if(k=='properties')
+
+               iter(o[k], p.concat(k));
+
+            });
+         }
+         return;
+      }
+      result.push(p.join('.'));
+   }
+   var result = [];
+   iter(object, []);
+
+   result.splice(0, 6);
+   //x = [...new Set(x)];
+   //console.log(result);
+   var z = [];
+   for (var i = 0; i < result.length; i++) {
+
+      var y = result[i] + '';
+      if (y.includes('displayName')) {
+         y = y.split('.properties.').join('.');
+         y = y.replace('.displayName', '');
+         y = y.replace('items.', '');
+         y = y.replace('.type', '');
+         y = y.replace('.description', '');
+         y = y.replace('.format', '');
+         y = y.replace('.pattern', '');
+         y = y.replace('.additionalProperties', '');
+         y = y.replace('.const', '');
+         y = y.replace('.minimum', '');
+
+         z.push(y);
+
+
+         //console.log(y);
+      }
+   }
+
+
+   result = [...new Set(z)];
+   return result;
+}
+/**********************************************/
+/*                parseToJSON                 */
+/**********************************************/
+function parseToJSON(sheet = SpreadsheetApp.getActiveSheet(), fname = "ma", pic = "abcdefghi", reqEmail = "mmm@mm.com", phone, address, event = "Weight") {
+    var log = "";
+    try {
+        var startTime = new Date().getTime();
+
+        // Get JSONObject
+        var JSONObject = JSON.parse(cache.get('JSONObject'))[0];
+
+        JSONObject["source"] = {
+            "id": JSONObject.source?.id || "",
+            "ip_address": JSONObject.source?.ip_address || "0.0.0.0"
+        };
+
+        JSONObject.message["eventName"] = JSONObject.eventName || event;
+        JSONObject.message.item["itemType"] = "Animal";
+
+        JSONObject["owner"] = {
+            "givenName": JSONObject.owner?.givenName || fname,
+            "familyName": JSONObject.owner?.familyName || fname,
+            "email": JSONObject.owner?.email || reqEmail,
+            "telephone": JSONObject.owner?.telephone || phone,
+            "address": JSONObject.owner?.address || address,
+            "id": JSONObject.owner?.id || pic
+        };
+
+        // Fetch all data in one call
+        var data = sheet.getDataRange().getValues();
+        var key = data[0];
+
+        var endTime = new Date().getTime();
+        var xtime = endTime - startTime;
+
+        var jObject = [];
+
+        for (let ii = 0; ii < 11; ii++) {
+            startTime = new Date().getTime();
+
+            for (var i = 1; i < data.length; i++) {
+                var tempJSON = JSON.parse(JSON.stringify(JSONObject)); // deep copy
+
+                for (var j = 0; j < data[i].length; j++) {
+                    var value = data[i][j];
+                    if (key[j].includes('Date')) {
+                        value = Utilities.formatDate(value, "GMT", "yyyy-MM-dd'T'HH:mm:ss'Z'");
+                    }
+                    tempJSON = JSON.parse(JSON.stringify(tempJSON), (k, v) => v == key[j] ? value : v);
+                }
+                jObject.push(tempJSON);
+            }
+
+            endTime = new Date().getTime() + xtime;
+            log += (endTime - startTime) + "ms\n";
+        }
+    } catch (error) {
+      console.log(error);
+        return "[]";
     }
-    result.push(p.join('.'));
+
+    SpreadsheetApp.getUi().alert('Execution time of parseToJSON: \n' + log);
+    return jObject;
+}
+
+/************************************************/
+/*           validation with LEI schema       */
+/**********************************************/
+
+
+function validate(message) {
+
+//SpreadsheetApp.getUi().alert(message);
+
+  var log="";
+  for (let i = 0; i <= 11; i++) {
+   var startTime = new Date().getTime(); // Capture the start time
+   var options = {
+      'method': 'POST', // Replace with the HTTP method of your API
+      'contentType': 'application/json',
+      'payload': message,
+      'muteHttpExceptions': true
+   };
+
+
+
+   var response = UrlFetchApp.fetch('https://efca-58-178-254-235.ngrok.io/valid', options);
+   //13.55.120.110
+   Logger.log(response.getContentText()); // Replace with how you want to handle the response
+   
+    var endTime = new Date().getTime(); // Capture the end time
+    var executionTime = endTime - startTime; // Calculate the execution time
+    log+=executionTime+"\n"
   }
-  var result = [];
-  iter(object, []);
 
+  SpreadsheetApp.getUi().alert('Execution time of Validate: \n' + log + ' milliseconds');
+   return response.getContentText();
+}
+/***********************************************/
+/*          clear the spreadsheet             */
+/**************************************** *****/
+function clearSpreadsheet() {
+   console.time("clearSpreadsheet");
+   var sheet = SpreadsheetApp.getActiveSheet();
+   sheet.clearContents();
+   sheet.clearNotes();
+   sheet.getRange(1, 1, sheet.getMaxRows(), sheet.getMaxColumns()).clearDataValidations();
+   sheet.getRange(1, 1, sheet.getMaxRows(), sheet.getMaxColumns()).setBackground(null);
+   console.timeEnd("clearSpreadsheet");
 
-  result.splice(0, 6);
-  //x = [...new Set(x)];
-  var z = [];
-  for (var i = 0; i < result.length; i++) {
+}
+/**********************************************/
+/*     check Invalid Values in spreadsheet    */
+/**********************************************/
+function checkInvalidValues() {
+  var flag=false;
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var range = sheet.getRange(1, 1, sheet.getLastRow(), sheet.getLastColumn()); // Adjust the range as needed
+  var values = range.getValues();
+  var validations = range.getDataValidations();
 
-    var y = result[i] + '';
-    if (y.includes('displayName')) {
-      y = y.split('.properties.').join('.');
-      y = y.replace('.displayName', '');
-      y = y.replace('items.', '');
-      y = y.replace('.type', '');
-      y = y.replace('.description', '');
-      y = y.replace('.format', '');
-      y = y.replace('.pattern', '');
-      y = y.replace('.additionalProperties', '');
-      y = y.replace('.const', '');
-      y = y.replace('.minimum', '');
+  for (var i = 0; i < validations.length; i++) {
+    for (var j = 0; j < validations[i].length; j++) {
+      var validation = validations[i][j];
+      var value = values[i][j];
+      
+      if (validation !== null) {
+        var criteria = validation.getCriteriaType();
+        var args = validation.getCriteriaValues();
 
-      z.push(y);
-
-
-      //console.log(y);
+        if (!isValid(value, criteria, args)) {
+          sheet.getRange(i + 1, j + 1).setBackground("red");
+          flag=true;
+        }
+        else
+        sheet.getRange(i + 1, j + 1).setBackground(null);
+      }
     }
   }
+  return flag;
+}
+
+function isValid(value, criteria, args) {
+  switch (criteria) {
+    case SpreadsheetApp.DataValidationCriteria.DATE_IS_VALID_DATE:
+      return !isNaN(Date.parse(value));
+    case SpreadsheetApp.DataValidationCriteria.NUMBER_BETWEEN:
+      return value >= args[0] && value <= args[1];
+    case SpreadsheetApp.DataValidationCriteria.NUMBER_GREATER_THAN:
+      return value > args[0];
+    case SpreadsheetApp.DataValidationCriteria.NUMBER_GREATER_THAN_OR_EQUAL_TO:
+      return value >= args[0];
+    case SpreadsheetApp.DataValidationCriteria.NUMBER_LESS_THAN:
+      return value < args[0];
+    case SpreadsheetApp.DataValidationCriteria.NUMBER_LESS_THAN_OR_EQUAL_TO:
+      return value <= args[0];
+    case SpreadsheetApp.DataValidationCriteria.NUMBER_NOT_BETWEEN:
+      return value < args[0] || value > args[1];
+    case SpreadsheetApp.DataValidationCriteria.NUMBER_NOT_EQUAL_TO:
+      return value != args[0];
+    case SpreadsheetApp.DataValidationCriteria.TEXT_IS_VALID_EMAIL:
+      // Add your own email validation logic here
+      return true;
+    case SpreadsheetApp.DataValidationCriteria.TEXT_IS_VALID_URL:
+      // Add your own URL validation logic here
+      return true;
+    case SpreadsheetApp.DataValidationCriteria.VALUE_IN_LIST:
+      return args[0].indexOf(value) !== -1;
+    default:
+      return true;
+  }
+}
 
 
-  result = [...new Set(z)];
+
+function saveToGoogleDrive(jsonData) {
+    var log="";
+  for (let ii = 0; ii < 11; ii++) {
+   var startTime = new Date().getTime(); // Capture the start time
+
+  var blob = Utilities.newBlob(jsonData, "application/json", "data.json");
+  DriveApp.createFile(blob);
+
+    var endTime = new Date().getTime(); // Capture the end time
+    var executionTime = endTime - startTime; // Calculate the execution time
+    log+=executionTime+"\n"
+  }
+SpreadsheetApp.getUi().alert('Execution time of saveToGoogleDrive: \n' + log + ' milliseconds');
+  return "File saved successfully!";
+}
+
+/***************************************** */
+/*******************************************/
+
+// Custom function to serialize individual items
+function customSerializeItem(item) {
+  if (typeof item === 'number') {
+    return item.toString();
+  } else if (typeof item === 'string') {
+    return `"${item}"`;
+  } else if (Array.isArray(item)) {
+    return customStringify(item);
+  } else if (typeof item === 'object') {
+    const keys = Object.keys(item);
+    const serializedProps = keys.map(key => `"${key}":${customSerializeItem(item[key])}`).join(',');
+    return `{${serializedProps}}`;
+  }
+  return ''; // Fallback for unsupported types
+}
+
+// Custom function to serialize an array
+function customStringify(array) {
+  let result = '[';
+  for (let i = 0; i < array.length; i++) {
+    if (i > 0) {
+      result += ',';
+    }
+    result += JSON.stringify(array[i]);
+  }
+  result += ']';
   return result;
 }
 
-/***********************************************
- *  parse json back
- **********************************************/
-
-const checkPath = (o, path) => {
-  try {
-    if (path.includes('.')) {
-      if (o.hasOwnProperty(path.split('.')[0])) return checkPath(o[path.split('.')[0]], path.split('.').slice(1).join('.'));
-      else return false
-    }
-    else
-      return o.hasOwnProperty(path);
-  } catch (error) { return false }
-
-}
-/***********************************************
- *  pasreToJSON
- **********************************************/
-function pasreToJSON(sheet, fname = "ma", pic = "abcdefghi", reqEmail = "mmm@mm.com", event = "Weight") {
-  var jObject = [];
-  //JSONObject = {"eventDateTime":"Event Date Time","message":{"item":{"identifier":"RFID"},"event":{"weightx":{"value":"Value"}}}};
-  JSONObject = JSON.parse(JSONObject)
-  JSONObject = JSONObject[0];
-  //SpreadsheetApp.getUi().alert(JSON.stringify(JSONObject));
-  //JSONObject=JSON.stringify(JSONObject);
-  //SpreadsheetApp.getUi().alert(JSONObject);
-
-  var sourceObject = {};
-  sourceObject["id"] = !checkPath(JSONObject, 'source.id') ? "" : JSONObject.source.id;
-  sourceObject["ip_address"] = !checkPath(JSONObject, 'source.ip_address') ? "0.0.0.0" : JSONObject.source.ip_address;
-
-  JSONObject["source"] = sourceObject;
-
-
-  JSONObject.message["eventName"] = !checkPath(JSONObject, 'eventName') ? event : JSONObject.eventName;
-
-  JSONObject.message.item["itemType"] = "Animal";
-
-
-  var ownerObject = {};
-  ownerObject["givenName"] = !checkPath(JSONObject, 'owner.givenName') ? fname : JSONObject.owner.givenName;
-  ownerObject["familyName"] = !checkPath(JSONObject, 'owner.familyName') ? fname : JSONObject.owner.familyName;
-  ownerObject["email"] = !checkPath(JSONObject, 'owner.email') ? reqEmail : JSONObject.owner.email;
-  ownerObject["id"] = !checkPath(JSONObject, 'owner.id') ? pic : JSONObject.owner.id;
-  JSONObject["owner"] = ownerObject;
-
-  //console.log(JSON.stringify(ownerObject));
-  //console.log(JSON.stringify(JSONObject));
-
-  var strJSON = JSON.stringify(JSONObject);
-  sheet = SpreadsheetApp.getActiveSheet();
-  var headersRange = sheet.getRange(1, 1, sheet.getLastRow(), sheet.getLastColumn());
-  //var dataRange = sheet.getRange(2, 1, sheet.getLastRow(), sheet.getLastColumn());
-  var data = headersRange.getValues();
-
-  //SpreadsheetApp.getUi().alert(JSON.stringify(data));
-  //console.log(headersRange.getValues());
-  for (var i = 1; i < data.length; i++) {
-
-    strJSON = JSON.stringify(JSONObject);
-    for (var j = 0; j < data[i].length; j++) {
-      //strJSON = strJSON.replace(data[0][j], data[i][j]);
-      if (data[0][j].includes('Date')) {
-        var date = Utilities.formatDate(data[i][j], "GMT", "yyyy-MM-dd'T'HH:mm:ss'Z'");
-
-        strJSON = JSON.stringify(JSON.parse(strJSON, (k, v) => v == data[0][j] ? date : v));
-      }
-      // else if (data[0][j].includes('Time')) {
-      //   var x = data[i][j] == '' ? new Date(new Date().setHours(0, 0, 0, 0)) : data[i][j];
-      //   var time = Utilities.formatDate(x, "GMT", "HH:mm:ss'Z'")
-      //   strJSON = JSON.stringify(JSON.parse(strJSON, (k, v) => v == data[0][j] ? time : v));
-      // }
-      // else if (data[0][j].includes('List'))
-      //   strJSON = JSON.stringify(JSON.parse(strJSON, (k, v) => v == data[0][j] ? data[i][j].split(',').map(Number) : v));
-      else {
-
-        strJSON = JSON.stringify(JSON.parse(strJSON, (k, v) => v == data[0][j] ? data[i][j] : v));
-        //console.log(strJSON);
-      }
-
-    }
-    jObject.push(JSON.parse(strJSON));
-  }
-
-
-  console.log(JSON.stringify(jObject));
-  return JSON.stringify(jObject);
-}
