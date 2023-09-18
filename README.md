@@ -21,7 +21,7 @@ If you find any issues or have suggestions for improvements, please feel free to
 This project is licensed under Apache License 2.0 - see the [LICENSE][lic] file for details.
 
 [//]: #
-  [LEI2JSON]:  <https://docs.google.com/spreadsheets/d/1SOqi-JuGV21YAHhK24SDBsRlO907d_GajVn9nqFKq4Q/edit#gid=0>
+  [LEI2JSON]:  <https://docs.google.com/spreadsheets/d/1bY8gVCLbVUoGXgYd5DosBFXTjOZqGR4kK8yUstpqIBs/edit#gid=0>
   [lic]: <https://github.com/mahirgamal/LEI2JSON/blob/main/LICENSE>
   [html]: <https://github.com/mahirgamal/LEI2JSON/blob/main/src/Page.html>
   [JavaScript]: <https://github.com/mahirgamal/LEI2JSON/blob/main/src/Code.gs>
