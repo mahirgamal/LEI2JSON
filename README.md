@@ -1,5 +1,5 @@
 <p align="center"><style="font-size: 32px">LEI2JSON: <b>L</b>ivestock <b>E</b>event <b>I</b>nformation <b>To JSON</b></font></p>
-
+# LEI2JSON: Livestock Event Information To JSON
 
 ## _Introduction_
 The LEI2JSON tool enables livestock producers to generate JSON data from a spreadsheet. The tool uses a Google Spreadsheet as an interface, allowing producers to enter data into a familiar tool, reducing the learning curve for new applications.
