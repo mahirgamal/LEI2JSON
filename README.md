@@ -69,7 +69,7 @@ If you encounter any issues or have questions, please check our [FAQ](#FAQ) sect
 ## FAQ
 **Q1: How do I get started with LEI2JSON?**
 
-A1:To get started with LEI2JSON, please refer to the "Getting Started" section in the README.md of our repository. It provides step-by-step instructions for setting up and using the add-on within Google Sheets.
+A1:To get started with LEI2JSON, please refer to the [Getting Started](#Getting Started) section in the README.md of our repository. It provides step-by-step instructions for setting up and using the add-on within Google Sheets.
 
 **Q2: Is the order of columns in the spreadsheet important when using your add-on?**
 
