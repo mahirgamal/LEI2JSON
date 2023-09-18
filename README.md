@@ -50,7 +50,7 @@ To set up LEI2JSON in your Google Sheet, follow these simple steps:
 2. Access Apps Script:
    - Click on the **Extensions** menu at the top.
    - Choose **Apps Script** from the dropdown menu.
-![image](https://github.com/mahirgamal/LEI2JSON/assets/86919381/ddcc4377-2f7c-4600-a0f0-4179b1206ed6)
+![image](https://github.com/mahirgamal/LEI2JSON/assets/86919381/8b932975-3f68-4bf0-b2ea-fc8696fbccac)
 3. Create Code.gs and Page.html Files:
    In the new Apps Script window:
    - On the left-hand side, click **+** on the **Files** tab.
@@ -66,7 +66,6 @@ Now you're ready to use **LEI2JSON** within your Google Sheet:
 
 ## Contributing
 If you find any issues or have suggestions for improvements, please feel free to open an issue or submit a pull request.
-
 
 
 ## License
