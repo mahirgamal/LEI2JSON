@@ -67,9 +67,15 @@ Now you're ready to use **LEI2JSON** within your Google Sheet:
 ## Contributing
 If you find any issues or have suggestions for improvements, please feel free to open an issue or submit a pull request.
 
+## Acknowledgments
+We acknowledge that this work originates from the Trakka project and builds on the existing TerraCipher Trakka implementation. We appreciate the support and resources provided by the Trakka project team. Also, we thank Dave Swain and Will Swain from TerraCipher for their guidance and assistance throughout **LEI2JSON**.
+
 
 ## License
 This project is licensed under Apache License 2.0 - see the [LICENSE][lic] file for details.
+
+## Contact
+If you have any questions, suggestions or need assistance, please don't hesitate to contact us at mhabib@csu.edu.au.
 
 [//]: #
   [LEI2JSON]:  <https://docs.google.com/spreadsheets/d/1bY8gVCLbVUoGXgYd5DosBFXTjOZqGR4kK8yUstpqIBs/edit#gid=0>
