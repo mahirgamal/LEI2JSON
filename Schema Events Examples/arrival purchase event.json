@@ -1,0 +1,332 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Arrival",
+  "type": "array",
+  "items": {
+    "description": "The root structure for a packet of data.",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "source",
+      "owner",
+      "eventDateTime",
+      "message"
+    ],
+    "properties": {
+      "eventDateTime": {
+        "displayName": "Event Date Time",
+        "type": "string",
+        "format": "date-time",
+        "description": "ISO8601 date and time. MUST contain time zone. UTC recommended."
+      },
+      "source": {
+        "additionalProperties": false,
+        "type": "object",
+        "description": "The device or software that the event originates from.",
+        "required": [
+          "ip_address",
+          "id"
+        ],
+        "properties": {
+          "ip_address": {
+            "type": "string",
+            "format": "ipv4",
+            "description": "The IP address of the publishing technology."
+          },
+          "id": {
+            "type": "string",
+            "description": "Unique identifier on location level in the source system for this device."
+          }
+        }
+      },
+      "owner": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id"
+        ],
+        "properties": {
+          "givenName": {
+            "type": "string",
+            "description": "First name of the person"
+          },
+          "familyName": {
+            "type": "string",
+            "description": "Surname of the person"
+          },
+          "email": {
+            "type": "string",
+            "description": "Email address",
+            "format": "email"
+          },
+          "id": {
+            "type": "string",
+            "description": "The property identification code from the owner."
+          },
+          "telephone": {
+            "type": "string",
+            "description": "Telephone contact"
+          }
+        }
+      },
+      "message": {
+        "required": [
+          "eventName",
+          "item",
+          "event"
+        ],
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "eventName": {
+            "description": "The human and machine readiable unqiue name of the event.",
+            "type": "string"
+          },
+          "item": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "itemType": {
+                "description": "Animal, crop, machine , ...",
+                "type": "string",
+                "const": "Animal"
+              },
+              "animal": {
+                "type": "object",
+	        "required": [
+	           "identifier"
+	        ],
+                "additionalProperties": false,
+                "properties": {
+                  "identifier": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "id": {
+                        "displayName": "Tage Type",
+                        "type": "string",
+                        "description": "The type of the tag for the animal."
+                      },
+                      "scheme": {
+                        "displayName": "Tage No",
+                        "type": "string",
+                        "description": "The Tag no.(RFID) for the animal."
+                      }
+                    }
+                  },
+                  "specie": {
+                    "displayName": "Breed",
+                    "description": "Buffalo , Cattle , Deer , Elk , Goat , Horse , Pig , Sheep , Camel , Kangaroo",
+                    "type": "string"
+                  },
+                  "gender": {
+                    "displayName": "Gender",
+                    "description": "Female , FemaleNeuter , Male , MaleCryptorchid , MaleNeuter , Unknown",
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "event": {
+            "description": "A mean weight event for cattle.",
+            "required": [
+              "arrivalReason"
+            ],
+            "type": "object",
+            "additionalProperties": true,
+            "properties": {
+              "arrivalReason": {
+                "displayName": "Reason",
+                "type": "string",
+                "enum": [
+                  "Purchase",
+                  "InternalTransfer",
+                  "Imported",
+                  "StudService",
+                  "StudServiceReturn",
+                  "Slaughter",
+                  "Agistment",
+                  "AgistmentReturn",
+                  "Show",
+                  "ShowReturn",
+                  "Sale",
+                  "SaleReturn",
+                  "Other"
+                ],
+                "description": "arrival reason"
+              },
+              "shipment": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "id": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "id": {
+                        "displayName": "Invoice Type",
+                        "type": "string",
+                        "description": "The type of the tag for the animal."
+                      },
+                      "scheme": {
+                        "displayName": "Invoice Number",
+                        "type": "string",
+                        "description": "The Tag no.(RFID) for the animal."
+                      }
+                    }
+                  },
+                  "origin": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "id": {
+                        "displayName": "Origin ID",
+                        "type": "string",
+                        "description": "Identifier for the organization"
+                      },
+                      "name": {
+                        "displayName": "Origin Name",
+                        "type": "string",
+                        "description": "Name of the organization"
+                      },
+                      "email": {
+                        "displayName": "Origen Email",
+                        "type": "string",
+                        "description": "Email contact for the organization"
+                      },
+                      "address": {
+                        "displayName": "Origin Address",
+                        "type": "string",
+                        "description": "address of the organization"
+                      }
+                    }
+                  },
+                  "destination": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "id": {
+                        "displayName": "Destination ID",
+                        "type": "string",
+                        "description": "Identifier for the organization"
+                      },
+                      "name": {
+                        "displayName": "Destination Name",
+                        "type": "string",
+                        "description": "Name of the organization"
+                      },
+                      "email": {
+                        "displayName": "Destination Email",
+                        "type": "string",
+                        "description": "Email contact for the organization"
+                      },
+                      "address": {
+                        "displayName": "Destination Address",
+                        "type": "string",
+                        "description": "address of the organization"
+                      }
+                    }
+                  },
+                  "vehicles": {
+                    "type": "array",
+                    "items": {
+                      
+                      "type": "string"
+                    },
+                    "description": "Identification of the vehicle (for example, licence plate)"
+                  }
+                }
+              },
+              "changeOfOwnerShip": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "lot": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "description": "Describes the lot details",
+                    "properties": {
+                      "lotId": {
+                        "displayName": "Lot ID",
+                        "type": "string",
+                        "description": "Lot Identification number in the sale"
+                      }
+                    }
+                  },
+                  "purchaser": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "id": {
+                        "displayName": "Purchaser ID",
+                        "type": "string",
+                        "description": "Identifier for the organization"
+                      },
+                      "name": {
+                        "displayName": "Purchaser Name",
+                        "type": "string",
+                        "description": "Name of the organization"
+                      },
+                      "email": {
+                        "displayName": "Purchaser Email",
+                        "type": "string",
+                        "description": "Email contact for the organization"
+                      },
+                      "address": {
+                        "displayName": "Purchaser Address",
+                        "type": "string",
+                        "description": "address of the organization"
+                      }
+                    }
+                  },
+                  "transactionCost": {
+                    "type": "object",
+                    "description": "provides the...",
+                    "properties": {
+                      "currency": {
+                        "displayName":"Currency",
+                        "type": "string",
+                        "description": "UNCEFACT Code for the currency used in the transaction"
+                      },
+                      "totalCost": {
+                        "displayName":"Cost",
+                        "type": "number",
+                        "format": "double",
+                        "description": "Total cost of the transaction"
+                      }
+                    }
+                  }
+                }
+              },
+              "date": {
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          },
+          "session": {
+            "type": "object",
+            "description": "session details",
+            "additionalProperties": false,
+            "properties": {
+              "sessionID": {
+                "type": "string",
+                "description": "random number"
+              },
+              "totalInSession": {
+                "type": "integer",
+                "description": "total of rfid per pic",
+                "minimum": 0
+              }
+            },
+            "required": [
+              "sessionID",
+              "totalInSession"
+            ]
+          }
+        }
+      }
+    }
+  }
+}
