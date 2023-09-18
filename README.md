@@ -64,7 +64,7 @@ Now you're ready to use **LEI2JSON** within your Google Sheet:
 ![image](https://github.com/mahirgamal/LEI2JSON/assets/86919381/c74200a4-f16d-464f-bcbd-7bcde07ca913)
 
 ## Troubleshooting
-If you encounter any issues or have questions, please check our [FAQ][##FAQ] section for solutions. If your problem persists, feel free to [contact us][## Contact].
+If you encounter any issues or have questions, please check our [FAQ](#FAQ) section for solutions. If your problem persists, feel free to [contact us](#Contact).
 
 ## Contributing
 If you find any issues or have suggestions for improvements, please feel free to open an issue or submit a pull request.
