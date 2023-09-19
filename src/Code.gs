@@ -34,7 +34,7 @@ function generateMessage(fname = "ma", pic = "abcdefghi", reqEmail = "mmm@mm.com
 /*                save Message             */
 /*******************************************/
 function saveMessage(saveOption,message) {
-   console.time("saveMessage");
+  
    if (saveOption === SpreadsheetApp.getUi().Button.YES) {
          // Save the JSON file locally on the user's computer
          var fileName = "message.json"; // Set the desired file name
@@ -56,18 +56,18 @@ function saveMessage(saveOption,message) {
             SpreadsheetApp.getUi().alert("Failed to save the file.");
          }
       }
-   console.timeEnd("saveMessage");
+   
 }
 /*******************************************/
 /*                    menu                 */
 /*******************************************/
 function onOpen() {
-    console.time("onOpen");
+    
    SpreadsheetApp.getUi() // Or DocumentApp or SlidesApp or FormApp.
       .createMenu('LEI2JSON')
       .addItem('Generate JSON Message', 'showSidebar')
       .addToUi();
-    console.timeEnd("onOpen");
+   
 }
 /*******************************************/
 /*          pre-fill the form data         */
@@ -109,15 +109,14 @@ function showSidebar() {
    clearSpreadsheet();
 }
 /*******************************************/
-/*              event template             */
+/*        event build template             */
 /*******************************************/
-function template(json) {
+function buildTemplate(json) {
   
   
-  var log="";
-  for (let ii = 0; ii < 11; ii++) {
+
     clearSpreadsheet();
-   var startTime = new Date().getTime(); // Capture the start time
+   
    
    var eventName = JSON.parse(json).description;
    var obj = JSON.parse(json);
@@ -183,11 +182,7 @@ function template(json) {
    //}
    
    
-    var endTime = new Date().getTime(); // Capture the end time
-    var executionTime = endTime - startTime; // Calculate the execution time
-    log+=executionTime+"\n"
-  }
-SpreadsheetApp.getUi().alert('Execution time of template: \n' + log + ' milliseconds');
+
    return eventName;
 }
 /*******************************************/
@@ -360,7 +355,6 @@ function getKeys(object) {
 /*                parseToJSON                 */
 /**********************************************/
 function parseToJSON(sheet = SpreadsheetApp.getActiveSheet(), fname = "ma", pic = "abcdefghi", reqEmail = "mmm@mm.com", phone, address, event = "Weight") {
-    var log = "";
     try {
         var startTime = new Date().getTime();
 
@@ -393,8 +387,7 @@ function parseToJSON(sheet = SpreadsheetApp.getActiveSheet(), fname = "ma", pic 
 
         var jObject = [];
 
-        for (let ii = 0; ii < 11; ii++) {
-            startTime = new Date().getTime();
+
 
             for (var i = 1; i < data.length; i++) {
                 var tempJSON = JSON.parse(JSON.stringify(JSONObject)); // deep copy
@@ -408,16 +401,11 @@ function parseToJSON(sheet = SpreadsheetApp.getActiveSheet(), fname = "ma", pic 
                 }
                 jObject.push(tempJSON);
             }
-
-            endTime = new Date().getTime() + xtime;
-            log += (endTime - startTime) + "ms\n";
-        }
     } catch (error) {
       console.log(error);
         return "[]";
     }
 
-    SpreadsheetApp.getUi().alert('Execution time of parseToJSON: \n' + log);
     return jObject;
 }
 
@@ -430,7 +418,6 @@ function validate(message) {
 
 //SpreadsheetApp.getUi().alert(message);
 
-  var log="";
   for (let i = 0; i <= 11; i++) {
    var startTime = new Date().getTime(); // Capture the start time
    var options = {
@@ -532,18 +519,10 @@ function isValid(value, criteria, args) {
 
 
 function saveToGoogleDrive(jsonData) {
-    var log="";
-  for (let ii = 0; ii < 11; ii++) {
-   var startTime = new Date().getTime(); // Capture the start time
+
 
   var blob = Utilities.newBlob(jsonData, "application/json", "data.json");
   DriveApp.createFile(blob);
-
-    var endTime = new Date().getTime(); // Capture the end time
-    var executionTime = endTime - startTime; // Calculate the execution time
-    log+=executionTime+"\n"
-  }
-SpreadsheetApp.getUi().alert('Execution time of saveToGoogleDrive: \n' + log + ' milliseconds');
   return "File saved successfully!";
 }
 
