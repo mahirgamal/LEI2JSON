@@ -79,6 +79,14 @@ A2: Our add-on offers bidirectional functionality, which means it can work in bo
 
 A3: Our add-on utilises a predefined JSON schema called [LEI](https://github.com/mahirgamal/LEI-schema) (Livestock Event Information) to facilitate the generation and validation of JSON data. This schema serves as a structured template that defines livestock event data's expected format and structure. It ensures that the generated JSON data adheres to a consistent and standardised format, making it easier to work with and analyse.
 
+## Team
+
+Meet the dedicated team behind LEI2JSON:
+
+- [**Mahir Habib**](https://researchoutput.csu.edu.au/en/persons/mahir-habib) - Project Lead.
+- [**Ashad Kabir**](https://researchoutput.csu.edu.au/en/persons/akabircsueduau) - Associate Professor in Computer Science.
+- [**Lihong Zheng**](https://researchoutput.csu.edu.au/en/persons/lzhengcsueduau) -Associate Professor in Computer Science.
+
 ## Contributing
 If you find any issues or have suggestions for improvements, please feel free to open an issue or submit a pull request.
 
@@ -90,7 +98,7 @@ We acknowledge that this work originates from the Trakka project and builds on t
 This project is licensed under Apache License 2.0 - see the [LICENSE][lic] file for details.
 
 ## Contact
-If you have any questions, suggestions or need assistance, please don't hesitate to contact us at mhabib@csu.edu.au.
+If you have any questions, suggestions or need assistance, please don't hesitate to contact us at mhabib@csu.edu.au, akabir@csu.edu.au.
 
 [//]: #
   [LEI2JSON]:  <https://docs.google.com/spreadsheets/d/1bY8gVCLbVUoGXgYd5DosBFXTjOZqGR4kK8yUstpqIBs/edit#gid=0>
