@@ -85,7 +85,7 @@ Meet the dedicated team behind LEI2JSON:
 
 - [**Mahir Habib**](https://researchoutput.csu.edu.au/en/persons/mahir-habib) - Project Lead.
 - [**Ashad Kabir**](https://researchoutput.csu.edu.au/en/persons/akabircsueduau) - Associate Professor in Computer Science.
-- [**Lihong Zheng**](https://researchoutput.csu.edu.au/en/persons/lzhengcsueduau) -Associate Professor in Computer Science.
+- [**Lihong Zheng**](https://researchoutput.csu.edu.au/en/persons/lzhengcsueduau) - Associate Professor in Computer Science.
 
 ## Contributing
 If you find any issues or have suggestions for improvements, please feel free to open an issue or submit a pull request.
