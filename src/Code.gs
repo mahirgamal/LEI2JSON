@@ -356,7 +356,7 @@ function getKeys(object) {
 /**********************************************/
 function parseToJSON(sheet = SpreadsheetApp.getActiveSheet(), fname = "ma", pic = "abcdefghi", reqEmail = "mmm@mm.com", phone, address, event = "Weight") {
     try {
-        var startTime = new Date().getTime();
+        
 
         // Get JSONObject
         var JSONObject = JSON.parse(cache.get('JSONObject'))[0];
@@ -381,9 +381,6 @@ function parseToJSON(sheet = SpreadsheetApp.getActiveSheet(), fname = "ma", pic 
         // Fetch all data in one call
         var data = sheet.getDataRange().getValues();
         var key = data[0];
-
-        var endTime = new Date().getTime();
-        var xtime = endTime - startTime;
 
         var jObject = [];
 
@@ -417,28 +414,14 @@ function parseToJSON(sheet = SpreadsheetApp.getActiveSheet(), fname = "ma", pic 
 function validate(message) {
 
 //SpreadsheetApp.getUi().alert(message);
-
-  for (let i = 0; i <= 11; i++) {
-   var startTime = new Date().getTime(); // Capture the start time
    var options = {
       'method': 'POST', // Replace with the HTTP method of your API
       'contentType': 'application/json',
       'payload': message,
       'muteHttpExceptions': true
    };
-
-
-
-   var response = UrlFetchApp.fetch('https://efca-58-178-254-235.ngrok.io/valid', options);
-   //13.55.120.110
-   Logger.log(response.getContentText()); // Replace with how you want to handle the response
-   
-    var endTime = new Date().getTime(); // Capture the end time
-    var executionTime = endTime - startTime; // Calculate the execution time
-    log+=executionTime+"\n"
-  }
-
-  SpreadsheetApp.getUi().alert('Execution time of Validate: \n' + log + ' milliseconds');
+   var response = UrlFetchApp.fetch('https://2b11-58-178-254-235.ngrok.io/valid', options);
+     
    return response.getContentText();
 }
 /***********************************************/
