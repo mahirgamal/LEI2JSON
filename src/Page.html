@@ -362,7 +362,7 @@
                   google.script.run.withSuccessHandler(function(result) {
                      document.getElementById("eventName").value = result;
                      hideLoading();
-                  }).template(content);
+                  }).buildTemplate(content);
                };
                reader.readAsText(file);
             }
@@ -484,26 +484,19 @@
 
         function copyJSON() {
           var log="";
-          for (let i = 0; i < 11; i++) {
-          var startTime = performance.now();
           var textToCopy = document.getElementById("json_data").innerText;
           navigator.clipboard.writeText(textToCopy).then(function() {
             //alert('JSON text successfully copied to clipboard');
           }).catch(function(err) {
             console.error('Unable to copy text to clipboard', err);
           });
-            var endTime = performance.now();
-            var executionTime = endTime - startTime;
-            log+=executionTime+"\n"
-          }
-          alert('Execution time: \n' + log + ' milliseconds');
+
         }
 
 
         function downloadJSON() {
           var log="";
-          for (let i = 0; i < 11; i++) {
-          var startTime = performance.now();
+
           var textToSave = document.getElementById("json_data").innerText;
           var blob = new Blob([textToSave], { type: "application/json" });
           var url = URL.createObjectURL(blob);
@@ -513,13 +506,10 @@
           a.download = "data.json"; // You can name your file here
           document.body.appendChild(a);
           a.click();
-          var endTime = performance.now();
-            var executionTime = endTime - startTime;
-            log+=executionTime+"\n"
+          
             
           document.body.removeChild(a);
-          }
-          alert('Execution time: \n' + log + ' milliseconds');
+          
         }
 
 
