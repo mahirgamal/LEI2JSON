@@ -486,7 +486,7 @@
           var log="";
           var textToCopy = document.getElementById("json_data").innerText;
           navigator.clipboard.writeText(textToCopy).then(function() {
-            //alert('JSON text successfully copied to clipboard');
+            alert('JSON text successfully copied to clipboard');
           }).catch(function(err) {
             console.error('Unable to copy text to clipboard', err);
           });
