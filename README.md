@@ -36,7 +36,7 @@ To use **LEI2JSON**, follow these simple steps:
 2. Enter your livestock event data into the spreadsheet.
 3. Use the tool to generate JSON data.
 
-[![Watch the Getting Started Video][https://github.com/mahirgamal/LEI2JSON/assets/86919381/1439b81d-b4a9-449d-942c-6d5353e1093b]
+![Watch the Getting Started Video](https://github.com/mahirgamal/LEI2JSON/assets/86919381/1439b81d-b4a9-449d-942c-6d5353e1093b)
 
 
 
