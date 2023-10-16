@@ -4,8 +4,7 @@
 
 The **LEI2JSON** tool empowers livestock producers to effortlessly generate JSON data from a spreadsheet. It leverages a Google Spreadsheet as an interface, enabling producers to input data into a familiar tool, reducing the learning curve for new applications.
 
-![image](https://github.com/mahirgamal/LEI2JSON/assets/86919381/56607112-0c2e-44ca-a3fb-72065994427f)
-
+![image](https://github.com/mahirgamal/LEI2JSON/assets/86919381/09588795-798b-4b78-85af-09636a8a27ab)
 
 The application is designed to create a Google sheet template by extracting headers, notes, data types, and validation from a JSON schema. It performs validation and generates JSON data with options to copy, download, and save to Google Drive. **LEI2JSON** can be seamlessly integrated with other software, such as data analysis tools or data visualization software.
 
@@ -36,9 +35,7 @@ To use **LEI2JSON**, follow these simple steps:
 2. Enter your livestock event data into the spreadsheet.
 3. Use the tool to generate JSON data.
 
-[![Watch the Getting Started Video](getting-started-thumbnail.png)](https://github.com/mahirgamal/LEI2JSON/assets/86919381/1439b81d-b4a9-449d-942c-6d5353e1093b)
-
-
+https://github.com/mahirgamal/LEI2JSON/assets/86919381/874fd6bd-0513-4512-9f80-eb838300222d
 
 ## Installations
 
@@ -52,19 +49,18 @@ To set up LEI2JSON in your Google Sheet, follow these simple steps:
 2. Access Apps Script:
    - Click on the **Extensions** menu at the top.
    - Choose **Apps Script** from the dropdown menu.
-![image](https://github.com/mahirgamal/LEI2JSON/assets/86919381/8b932975-3f68-4bf0-b2ea-fc8696fbccac)
+![image](https://github.com/mahirgamal/LEI2JSON/assets/86919381/eb49db32-4220-4233-9a96-6b5999169f67)
 3. Create Code.gs and Page.html Files:
    In the new Apps Script window:
    - On the left-hand side, click **+** on the **Files** tab.
    - Select "New" and create two files: **Code.gs** and **Page.html**.
    - Copy and paste the desired code into these files ([HTML][html] [Apps Script][JavaScript]).
-  ![image](https://github.com/mahirgamal/LEI2JSON/assets/86919381/4829d1e4-ad5d-4bc6-9553-9226caa483e4)
+![image](https://github.com/mahirgamal/LEI2JSON/assets/86919381/435e2033-56ec-4c34-b9e0-6035b1fc5e0a)
 4. Save the project by clicking the floppy disk icon or pressing **Ctrl + S** (Windows) or **Command + S** (Mac).
 5. Go back to your Google Sheet and refresh the page.
 
 Now you're ready to use **LEI2JSON** within your Google Sheet:
-![image](https://github.com/mahirgamal/LEI2JSON/assets/86919381/c74200a4-f16d-464f-bcbd-7bcde07ca913)
-
+![image](https://github.com/mahirgamal/LEI2JSON/assets/86919381/4bce8c04-db0a-4797-aaf5-790c9f283fac)
 ## Troubleshooting
 If you encounter any issues or have questions, please check our [FAQ](#FAQ) section for solutions. If your problem persists, feel free to [contact us](#Contact).
 
