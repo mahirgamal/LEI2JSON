@@ -1,3 +1,4 @@
+
 # LEI2JSON: Livestock Event Information To JSON
 
 ## Introduction
@@ -40,26 +41,28 @@ https://github.com/mahirgamal/LEI2JSON/assets/86919381/874fd6bd-0513-4512-9f80-e
 ## Installations
 
 ### Clone the repository
-git clone https://github.com/mahirgamal/LEI2JSON.git
+    git clone https://github.com/mahirgamal/LEI2JSON.git
 
 ### Coding Google Sheet
 
-To set up LEI2JSON in your Google Sheet, follow these simple steps:
-1. Open Google Sheet: Begin by opening your Google Sheet where you want to use LEI2JSON.
-2. Access Apps Script:
-   - Click on the **Extensions** menu at the top.
-   - Choose **Apps Script** from the dropdown menu.
+To set up LEI2JSON in your Google Sheet, please follow the steps below:
+1. **Create a New Google Sheet**: Open Google Sheets and start a new document.
+2. **Access the Script Editor**: In the Google Sheets menu, go to `Extensions > Apps Script`.
 ![image](https://github.com/mahirgamal/LEI2JSON/assets/86919381/eb49db32-4220-4233-9a96-6b5999169f67)
-3. Create Code.gs and Page.html Files:
-   In the new Apps Script window:
-   - On the left-hand side, click **+** on the **Files** tab.
-   - Select "New" and create two files: **Code.gs** and **Page.html**.
-   - Copy and paste the desired code into these files ([HTML][html] [Apps Script][JavaScript]).
-![image](https://github.com/mahirgamal/LEI2JSON/assets/86919381/435e2033-56ec-4c34-b9e0-6035b1fc5e0a)
-4. Save the project by clicking the floppy disk icon or pressing **Ctrl + S** (Windows) or **Command + S** (Mac).
+3. **Create Code.gs and Page.html Files**:
+   - In the new Apps Script window:
+	 - [ ] On the left-hand side, click **$+$** on the **Files** tab.
+![image](https://github.com/mahirgamal/LEI2JSON/assets/86919381/d0a284c6-669c-4d71-b47d-bb8b03771c36)
+	 - [ ] Create a **Code.gs** file (if it's not already there) by choosing **Script** from the menu.
+	 - [ ] Similarly, choose **HTML** and create the **Page.html** file.
+	 - [ ] **Add the Script**: Copy the Apps Script code from the cloned repository or from this  **[link][JavaScript]** and paste it into the **Code.gs** file.
+	 - [ ] **Add the HTML**: Copy the HTML code from the cloned repository or from this  **[link][html]** and paste it into the **Page.html** file.
+4. Save the project by clicking the floppy disk icon 💾 on the top bar or pressing **Ctrl + S** (Windows) or **Command + S** (Mac).
 5. Go back to your Google Sheet and refresh the page.
+6. **Use the Extension**: The script will add **LEI2JSON** functionality to your Google Sheet, accessible from the menu bar.
+7. **Authorise and Run**: Follow the prompts to grant necessary permissions for running **LEI2JSON**.
 
-Now you're ready to use **LEI2JSON** within your Google Sheet:
+Now, you're all set to use **LEI2JSON** directly within your Google Sheet!
 ![image](https://github.com/mahirgamal/LEI2JSON/assets/86919381/4bce8c04-db0a-4797-aaf5-790c9f283fac)
 ## Troubleshooting
 If you encounter any issues or have questions, please check our [FAQ](#FAQ) section for solutions. If your problem persists, feel free to [contact us](#Contact).
