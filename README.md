@@ -101,6 +101,27 @@ This project is licensed under Apache License 2.0 - see the [LICENSE][lic] file 
 ## Contact
 If you have any questions, suggestions or need assistance, please don't hesitate to contact us at mhabib@csu.edu.au, akabir@csu.edu.au.
 
+## Citation
+
+If you use this project in your research, please cite:
+
+```bibtex
+@article{HABIB2024101629,
+title = {LEI2JSON: Schema-based validation and conversion of livestock event information},
+journal = {SoftwareX},
+volume = {26},
+pages = {101629},
+year = {2024},
+issn = {2352-7110},
+doi = {https://doi.org/10.1016/j.softx.2023.101629},
+url = {https://www.sciencedirect.com/science/article/pii/S2352711023003254},
+author = {Mahir Habib and Muhammad Ashad Kabir and Lihong Zheng}
+}
+```
+Or:
+
+**Habib, M., Kabir, M.A., & Zheng, L. (2024). _LEI2JSON: Schema-based validation and conversion of livestock event information_. SoftwareX, 26, 101629. [https://doi.org/10.1016/j.softx.2023.101629](https://doi.org/10.1016/j.softx.2023.101629)**
+
 [//]: #
   [LEI2JSON]:  <https://docs.google.com/spreadsheets/d/1bY8gVCLbVUoGXgYd5DosBFXTjOZqGR4kK8yUstpqIBs/edit#gid=0>
   [lic]: <https://github.com/mahirgamal/LEI2JSON/blob/main/LICENSE>
