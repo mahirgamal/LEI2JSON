@@ -85,7 +85,7 @@ A3: Our add-on utilises a predefined JSON schema called [LEI](https://github.com
 Meet the dedicated team behind LEI2JSON:
 
 - [**Mahir Habib**](https://researchoutput.csu.edu.au/en/persons/mahir-habib) - (PhD Student)
-- [**Ashad Kabir**](https://researchoutput.csu.edu.au/en/persons/akabircsueduau) - Associate Professor in Computer Science (Project Lead and Principal Supervisor)
+- [**Ashad Kabir**](https://researchoutput.csu.edu.au/en/persons/akabircsueduau) - Professor in Computer Science (Project Lead and Principal Supervisor)
 - [**Lihong Zheng**](https://researchoutput.csu.edu.au/en/persons/lzhengcsueduau) - Professor in Computer Science (Co-supervisor)
 
 ## Contributing
